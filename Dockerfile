@@ -17,7 +17,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # Copy the generated JAR from the builder stage
-COPY --from=builder /app/target/acadalyze-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/caltron-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port used by Spring Boot
 EXPOSE 8081

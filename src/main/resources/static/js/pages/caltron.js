@@ -77,14 +77,31 @@ function computeGrade() {
     // Validate dropdowns
     const dropdowns = [
         {id: '#gradeDropdown', name: 'Grade'},
-        {id: '#semesterDropdown', name: 'Semester'},
+        // {id: '#semesterDropdown', name: 'Semester'},
         {id: '#subjectDropdown', name: 'Subject'}
     ];
 
     dropdowns.forEach(dd => {
-        if (!$(dd.id).val() || $(dd.id).val().trim() === '') {
-            $(dd.id).addClass('is-invalid');
+        const $dropdown = $(dd.id);
+        const val = $dropdown.val();
+
+        if (!val || val.trim() === '') {
+            // add is-invalid to <select>
+            $dropdown.addClass('is-invalid');
+
+            // 🔹 if Select2 is applied, also add red border to Select2 container
+            if ($dropdown.hasClass('select2-hidden-accessible')) {
+                $dropdown.next('.select2').find('.select2-selection').addClass('is-invalid');
+            }
+
             isValid = false;
+        } else {
+            $dropdown.removeClass('is-invalid');
+
+            // 🔹 clean up Select2 UI if valid
+            if ($dropdown.hasClass('select2-hidden-accessible')) {
+                $dropdown.next('.select2').find('.select2-selection').removeClass('is-invalid');
+            }
         }
     });
 
@@ -102,7 +119,6 @@ function computeGrade() {
         html: `
             <div style="text-align:center; font-size:15px; line-height:1.6;">
                 <b>Grade:</b> ${$('#gradeDropdown option:selected').text() || '—'} <br>
-                <b>Semester:</b> ${$('#semesterDropdown option:selected').text() || '—'} <br>
                 <b>Subject:</b> ${$('#subjectDropdown option:selected').text() || '—'} <br>
                 <b>Written Works:</b> ${$('#wwScore').val()} / ${$('#wwTotal').val()} <br>
                 <b>Performance Tasks:</b> ${$('#ptScore').val()} / ${$('#ptTotal').val()} <br>
@@ -156,105 +172,110 @@ function computeGrade() {
             const suggestionHtml = suggestions.map(s => `<li class="list-group-item">${s}</li>`).join('');
 
             const output = `
-<div class="card shadow-sm border-0 mx-auto my-3 px-2" style="max-width: 900px; font-family: 'Segoe UI', sans-serif;">
-    <div class="card-header d-flex align-items-center bg-primary text-white">
-        <i class="fa-solid fa-chart-pie me-2 fs-5"></i>
-        <h5 class="mb-0 fw-bold">Grade Summary & Suggestions</h5>
-    </div>
-
-    <div class="card-body d-flex flex-column flex-md-row gap-3">
-        <!-- Left Column: Student Info & Scores -->
-        <div class="flex-grow-1">
-            <!-- Student Info -->
-            <div class="mb-3">
-                <div class="d-flex justify-content-between py-1 border-bottom">
-                    <span class="fw-semibold">Grade:</span>
-                    <span>${$('#gradeDropdown option:selected').text() || '—'}</span>
-                </div>
-                <div class="d-flex justify-content-between py-1 border-bottom">
-                    <span class="fw-semibold">Semester:</span>
-                    <span>${$('#semesterDropdown option:selected').text() || '—'}</span>
-                </div>
-                <div class="d-flex justify-content-between py-1 border-bottom">
-                    <span class="fw-semibold">Subject:</span>
-                    <span>${$('#subjectDropdown option:selected').text() || '—'}</span>
-                </div>
-            </div>
-
-            <!-- Scores Section -->
-            <div class="mb-2">
-                <h6 class="fw-bold mb-1">Scores</h6>
-
-                <div class="mb-2">
-                    <label class="form-label mb-1">Written Works</label>
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: ${data.writtenWorks.percent.toFixed(2)}%">
-                            ${data.writtenWorks.percent.toFixed(2)}%
-                        </div>
+                <div class="card shadow-sm border-0 mx-auto my-3 px-2" style="max-width: 900px; font-family: 'Segoe UI', sans-serif;">
+                    <div class="card-header d-flex align-items-center bg-primary text-white">
+                        <i class="fa-solid fa-chart-pie me-2 fs-5"></i>
+                        <h5 class="mb-0 fw-bold">Grade Summary & Suggestions</h5>
                     </div>
-                </div>
 
-                <div class="mb-2">
-                    <label class="form-label mb-1">Performance Tasks</label>
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: ${data.performanceTasks.percent.toFixed(2)}%">
-                            ${data.performanceTasks.percent.toFixed(2)}%
+                    <div class="card-body d-flex flex-column flex-md-row gap-3">
+                        <!-- Left Column: Student Info & Scores -->
+                        <div class="flex-grow-1">
+                            <!-- Student Info -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between py-1 border-bottom">
+                                    <span class="fw-semibold">Grade:</span>
+                                    <span>${$('#gradeDropdown option:selected').text() || '—'}</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-1 border-bottom">
+                                    <span class="fw-semibold">Subject:</span>
+                                    <span>${$('#subjectDropdown option:selected').text() || '—'}</span>
+                                </div>
+                            </div>
+
+                            <!-- Scores Section -->
+                            <div class="mb-2">
+                                <h6 class="fw-bold mb-1">Scores</h6>
+
+                                <div class="mb-2">
+                                    <label class="form-label mb-1">Written Works</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: ${data.writtenWorks.percent.toFixed(2)}%">
+                                            ${data.writtenWorks.percent.toFixed(2)}%
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="form-label mb-1">Performance Tasks</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: ${data.performanceTasks.percent.toFixed(2)}%">
+                                            ${data.performanceTasks.percent.toFixed(2)}%
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="form-label mb-1">Quarterly Exam</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-warning text-dark" role="progressbar" style="width: ${data.exam.percent.toFixed(2)}%">
+                                            ${data.exam.percent.toFixed(2)}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="mb-2">
-                    <label class="form-label mb-1">Quarterly Exam</label>
-                    <div class="progress" style="height: 20px;">
-                        <div class="progress-bar bg-warning text-dark" role="progressbar" style="width: ${data.exam.percent.toFixed(2)}%">
-                            ${data.exam.percent.toFixed(2)}%
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <!-- Right Column: Final Grade, Remarks & Suggestions -->
+                         <div class="flex-shrink-0" style="width: 250px;">
+                           <!-- Final Grade -->
+                            <div class="d-flex justify-content-between align-items-center p-3 mb-3 bg-light rounded border">
+                                <span class="fw-bold d-flex align-items-center gap-2">
+                                    Final Grade
+                                    <i id="toggleFinalGrade" class="fa-solid fa-eye" role="button" style="cursor: pointer;"></i>
+                                </span>
+                                <span id="finalGradeValue" class="badge bg-primary fs-6">${data.finalGrade.toFixed(2)}</span>
+                            </div>
 
-        <!-- Right Column: Final Grade, Remarks & Suggestions -->
-         <div class="flex-shrink-0" style="width: 250px;">
-            <!-- Final Grade -->
-            <div class="d-flex justify-content-between align-items-center p-3 mb-3 bg-light rounded border">
-                <span class="fw-bold">Final Grade</span>
-                <span class="badge bg-primary fs-6">${data.finalGrade.toFixed(2)}</span>
-            </div>
-
-            <!-- Remarks & Descriptor -->
-            <div class="mb-3">
-                <div class="d-flex justify-content-between py-1 border-bottom">
-                    <span class="fw-semibold">Remarks:</span>
-                    <span class="fw-bold text-success">${data.status}</span>
-                </div>
-                <div class="d-flex justify-content-between py-1 border-bottom">
-                    <span class="fw-semibold">Descriptor:</span>
-                    <span class="badge 
-                        ${data.finalGrade < 75 ? 'bg-danger' :
+                            <!-- Remarks & Descriptor -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between py-1 border-bottom">
+                                    <span class="fw-semibold">Remarks:</span>
+                                    <span class="fw-bold text-success">${data.status}</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-1 border-bottom">
+                                    <span class="fw-semibold">Classification :</span>
+                                    <span class="badge 
+                                        ${data.finalGrade < 75 ? 'bg-danger' :
                     data.finalGrade <= 79 ? 'bg-warning text-dark' :
                     data.finalGrade <= 84 ? 'bg-info text-dark' :
                     data.finalGrade <= 89 ? 'bg-primary' :
                     data.finalGrade <= 94 ? 'bg-success' :
                     'bg-success'}">
-                        ${data.desc}
-                    </span>
-                </div>
-            </div>
+                                        ${data.desc}
+                                    </span>
+                                </div>
+                            </div>
 
-            <!-- Suggestions Section -->
-            <div class="p-2 rounded-3" style="background-color: #fff3cd;">
-                <h6 class="fw-bold mb-2">Suggestions to Improve</h6>
-                <div class="fst-italic text-dark mb-0">
-                    ${suggestionHtml || 'No suggestions available.'}
+                            <!-- Suggestions Section -->
+                            <div class="p-2 rounded-3" style="background-color: #fff3cd;">
+                                <h6 class="fw-bold mb-2">Suggestions to Improve</h6>
+                                <div class="fst-italic text-dark mb-0">
+                                    ${suggestionHtml || 'No suggestions available.'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-`;
+                `;
 
             $('#out').html(output);
+
+            const gradeSpan = $("#finalGradeValue");
+            gradeSpan.data("realValue", gradeSpan.text());
+            gradeSpan.text("*****");
+            gradeSpan.data("hidden", true);
+            $("#toggleFinalGrade").removeClass("fa-eye").addClass("fa-eye-slash");
 
             //===== CAN BE USED FOR FUTURE REFERENCES (place this inside the const output) =====//
             //ML Prediction (baseline): ${data.prediction.toFixed(2)}
@@ -300,8 +321,28 @@ function resetForm() {
     $('#resetBtn').prop('disabled', true);
 }
 
-$(document).ready(function () {
+function toggleFinalGrade() {
+    const gradeSpan = $("#finalGradeValue");
+    const icon = $("#toggleFinalGrade");
 
+    // check if currently hidden
+    const isHidden = gradeSpan.data("hidden") === true;
+
+    if (isHidden) {
+        // 👁 Show the real grade
+        gradeSpan.text(gradeSpan.data("realValue"));
+        gradeSpan.data("hidden", false);
+        icon.removeClass("fa-eye-slash").addClass("fa-eye");
+    } else {
+        // 🙈 Hide the grade
+        gradeSpan.data("realValue", gradeSpan.text());
+        gradeSpan.text("*****");
+        gradeSpan.data("hidden", true);
+        icon.removeClass("fa-eye").addClass("fa-eye-slash");
+    }
+}
+
+$(document).ready(function () {
     function checkFormValues() {
         let hasValue = false;
 
@@ -329,5 +370,19 @@ $(document).ready(function () {
     $('select').on('change', checkFormValues);
 
     checkFormValues();
+
+    // ✅ Bind toggle to click
+    $(document).on("click", "#toggleFinalGrade", function () {
+        toggleFinalGrade();
+    });
+
+    // ✅ Default to hidden (mask instead of hide)
+    const gradeSpan = $("#finalGradeValue");
+    gradeSpan.data("value", gradeSpan.text());
+    gradeSpan.text("*****");
+    gradeSpan.data("hidden", true);
+    $("#toggleFinalGrade").removeClass("fa-eye").addClass("fa-eye-slash");
 });
+
+
 

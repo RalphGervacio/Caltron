@@ -6,6 +6,6 @@ import lombok.Data;
 public class SubjectBean {
 
     private Long id;
-    private Long semesterId;
+    private Long gradeId;
     private String name;
 }

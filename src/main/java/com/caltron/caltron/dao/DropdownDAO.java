@@ -1,7 +1,7 @@
 package com.caltron.caltron.dao;
 
 import com.caltron.caltron.beans.GradeBean;
-import com.caltron.caltron.beans.SemesterBean;
+// import com.caltron.caltron.beans.SemesterBean;
 import com.caltron.caltron.beans.SubjectBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,6 +29,7 @@ public class DropdownDAO {
         });
     }
 
+    /*
     // Get semesters by gradeId
     public List<SemesterBean> getSemestersByGrade(Long gradeId) {
         String sql = "SELECT semester_id AS id, "
@@ -51,6 +52,19 @@ public class DropdownDAO {
             SubjectBean bean = new SubjectBean();
             bean.setId(rs.getLong("id"));
             bean.setSemesterId(rs.getLong("semester_id"));
+            bean.setName(rs.getString("name"));
+            return bean;
+        });
+    }
+     */
+    // Get subjects by gradeId (direct, no semester)
+    public List<SubjectBean> getSubjectsByGrade(Long gradeId) {
+        String sql = "SELECT subject_id AS id, grade_id, subject_name AS name "
+                + "FROM subjects WHERE grade_id = ? ORDER BY subject_name ASC";
+        return jdbcTemplate.query(sql, new Object[]{gradeId}, (rs, rowNum) -> {
+            SubjectBean bean = new SubjectBean();
+            bean.setId(rs.getLong("id"));
+            bean.setGradeId(rs.getLong("grade_id"));
             bean.setName(rs.getString("name"));
             return bean;
         });

@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/target/caltron-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port used by Spring Boot
-EXPOSE 8081
+EXPOSE 8080
 
 # Start the app
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -29,7 +29,7 @@ public class HomeController {
 
     // Transmutation logic
     private double transmute(double rawPercent) {
-        if (rawPercent == 100.0){
+        if (rawPercent == 100.0) {
             return 100;
         }
         if (rawPercent >= 99.99) {
@@ -213,7 +213,7 @@ public class HomeController {
         // 4. Descriptor
         String descriptorGrade;
         if (finalGrade < 75) {
-            descriptorGrade = "Did Not Meet Expectations";
+            descriptorGrade = "Poor";
         } else if (finalGrade <= 79) {
             descriptorGrade = "Fairly Satisfactory";
         } else if (finalGrade <= 84) {
@@ -231,7 +231,6 @@ public class HomeController {
 
         // 6. AI Suggestions (graceful fallback if API not configured)
         //String advice = aiAdviceService.generateAdvice(wwPercent, ptPercent, examPercent, finalGrade);
-
         // 7. JSON response
         result.put("writtenWorks", Map.of("percent", wwPercent, "transmuted", wwTransmuted));
         result.put("performanceTasks", Map.of("percent", ptPercent, "transmuted", ptTransmuted));
@@ -239,6 +238,7 @@ public class HomeController {
         result.put("finalGrade", finalGrade);
         result.put("prediction", mlPrediction);
         result.put("status", finalGrade >= 75 ? "PASSED" : "FAILED");
+        result.put("color", finalGrade >= 75 ? "green" : "red");
         result.put("desc", descriptorGrade);
         //result.put("advice", advice);
         result.put("weights", Map.of(

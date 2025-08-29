@@ -304,7 +304,7 @@ function computeGrade() {
                                 Final Grade
                                 <i id="toggleFinalGrade" class="fa-solid fa-eye" role="button" style="cursor: pointer;"></i>
                             </span>
-                            <span id="finalGradeValue" class="badge bg-primary fs-6">${data.finalGrade.toFixed(2)}</span>
+                            <span id="finalGradeValue" class="badge bg-primary fs-6">${Math.round(data.finalGrade)}</span>
                         </div>
 
                         <!-- Remarks & Descriptor -->

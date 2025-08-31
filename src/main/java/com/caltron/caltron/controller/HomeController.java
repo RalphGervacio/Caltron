@@ -134,8 +134,10 @@ public class HomeController {
                 + (ptPercent * ptWeight / 100.0)
                 + (examPercent * examWeight / 100.0);
 
+        double roundedInitial = Math.round(initialGrade * 100.0) / 100.0;
+
         // 3. Transmute only once (DepEd official rule)
-        int finalGrade = transmute(initialGrade);
+        int finalGrade = transmute(roundedInitial);
 
         // 4. Descriptor
         String descriptorGrade;

@@ -1,3 +1,4 @@
+/* Animated gradient background */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
@@ -6,18 +7,16 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
 
-    /* Base soft gradient */
     background: linear-gradient(-45deg, #d8dee6, #cbd5e1, #e0e5ec, #d1d9e2);
     background-size: 400% 400%;
     animation: softGradient 20s ease infinite;
 }
 
-/* Gradient animation */
 @keyframes softGradient {
-    0% {
+    0%   {
         background-position: 0% 0%;
     }
-    50% {
+    50%  {
         background-position: 100% 100%;
     }
     100% {
@@ -25,98 +24,41 @@ body {
     }
 }
 
-/* Floating blobs everywhere */
-body::before,
-body::after,
-.blob1,
-.blob2,
-.blob3,
-.blob4,
-.blob5 {
-    content: "";
-    position: fixed;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-    z-index: 0;
-    pointer-events: none;
+/* Floating math symbols */
+.math-shape {
+    position: absolute;
+    opacity: 0.7;
+    animation: floatAround infinite linear;
 }
 
-/* Individual blobs */
-body::before {
-    width: 300px;
-    height: 300px;
-    top: 5%;
-    left: 10%;
-    animation: floatBlobs 30s linear infinite alternate;
+.red {
+    color: red;
 }
-body::after {
-    width: 400px;
-    height: 400px;
-    top: 50%;
-    left: 70%;
-    animation: floatBlobs 35s linear infinite alternate-reverse;
+.green {
+    color: green;
 }
-.blob1 {
-    width: 250px;
-    height: 250px;
-    top: 70%;
-    left: 20%;
-    animation: floatBlobs 40s linear infinite alternate;
+.orange {
+    color: orange;
 }
-.blob2 {
-    width: 150px;
-    height: 150px;
-    top: 20%;
-    left: 80%;
-    animation: floatBlobs 25s linear infinite alternate-reverse;
-}
-.blob3 {
-    width: 200px;
-    height: 200px;
-    top: 80%;
-    left: 60%;
-    animation: floatBlobs 45s linear infinite alternate;
-}
-.blob4 {
-    width: 350px;
-    height: 350px;
-    top: 30%;
-    left: 40%;
-    animation: floatBlobs 50s linear infinite alternate-reverse;
-}
-.blob5 {
-    width: 100px;
-    height: 100px;
-    top: 60%;
-    left: 90%;
-    animation: floatBlobs 30s linear infinite alternate;
+.purple {
+    color: purple;
 }
 
-/* Animation for blobs */
-@keyframes floatBlobs {
-    0% {
-        transform: translate(0,0) scale(1);
+@keyframes floatAround {
+    from {
+        transform: translateY(0) rotate(0deg);
     }
-    25% {
-        transform: translate(20px, 30px) scale(1.05);
-    }
-    50% {
-        transform: translate(-30px, 20px) scale(1);
-    }
-    75% {
-        transform: translate(30px, -20px) scale(1.05);
-    }
-    100% {
-        transform: translate(0,0) scale(1);
+    to {
+        transform: translateY(-200vh) rotate(720deg);
     }
 }
 
-/* Keep main content above the blobs */
+
+/* Content above symbols */
 main, header, .card {
     position: relative;
     z-index: 1;
 }
-
 
 /* Neumorphic Header */
 header {

@@ -59,8 +59,15 @@ public class DropdownDAO {
      */
     // Get subjects by gradeId (direct, no semester)
     public List<SubjectBean> getSubjectsByGrade(Long gradeId) {
-        String sql = "SELECT subject_id AS id, grade_id, subject_name AS name "
-                + "FROM subjects WHERE grade_id = ? ORDER BY subject_name ASC";
+        String sql = "SELECT s.subject_id AS id, "
+                + "s.grade_id, "
+                + "s.subject_name AS name, "
+                + "g.grade_level "
+                + "FROM subjects s "
+                + "INNER JOIN grades g ON s.grade_id = g.grade_id "
+                + "WHERE s.grade_id = ? "
+                + "ORDER BY s.subject_name ASC";
+
         return jdbcTemplate.query(sql, new Object[]{gradeId}, (rs, rowNum) -> {
             SubjectBean bean = new SubjectBean();
             bean.setId(rs.getLong("id"));
